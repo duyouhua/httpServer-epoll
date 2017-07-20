@@ -1,0 +1,74 @@
+#! /bin/bash
+
+ROOT_PATH=$(pwd)
+BIN=${ROOT_PATH}/httpd
+CONF=${ROOT_PATH}/conf/httpd.conf
+PID=${ROOT_PATH}/httpd.pid
+AUTO_PATH=${ROOT_PATH}/auto
+
+proc=$(basename $0)
+function usage()
+{
+	printf "usage: %s [start(-s)|stop(-t)|restart(-rt)]\n" "$proc"
+}
+function auto()
+{
+	cd auto;source ${AUTO_PATH}/auto_socket;cd ..;
+	cd auto;source ${AUTO_PATH}/auto_cpu_cores;cd ..;
+}
+function httpd_start()
+{
+	[[ -f $PID ]] && {
+		bin=$(basename $BIN)
+		ID=$(pidof $bin)
+		[[ $? -eq 0 ]] && {
+		printf "httpd is exist. pid is $(cat $PID)\n"
+		return 
+		}
+		rm -f $PID
+	}
+	
+	auto
+	ip=$(grep -E '^IP' $CONF | awk -F: '{printf $2}')
+	port=$(grep -E '^PORT' $CONF | awk -F: '{printf $2}')
+	cpu_cores=$(grep -E '^ALL_CPU_CORES' $CONF | awk -F: '{printf $2}')
+	$BIN $ip $port $cpu_cores
+	pidof $(basename $BIN) > $PID
+	printf "start done. pid is $(cat $PID) ...\n"
+}
+function httpd_stop()
+{
+	[[ ! -f $PID ]] && {
+		printf "httpd is not exist ...\n"
+		return 
+	}
+	kill -9 $(cat $PID)
+	rm -f $PID
+	printf "stop done ...\n"
+}
+function httpd_restart()
+{
+	httpd_stop;
+	httpd_start;
+}
+
+[ $# -ne 1 ] && {
+	usage;
+	exit 1
+}
+
+case $1 in
+	start | -s )
+		httpd_start
+	;;
+	stop | -t )
+		httpd_stop
+	;;
+	restart | -rt )
+		httpd_restart
+	;;
+	* )
+		usage;
+		exit 2
+	;;
+esac

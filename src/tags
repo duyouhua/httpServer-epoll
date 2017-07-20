@@ -1,0 +1,38 @@
+!_TAG_FILE_FORMAT	2	/extended format; --format=1 will not append ;" to lines/
+!_TAG_FILE_SORTED	1	/0=unsorted, 1=sorted, 2=foldcase/
+!_TAG_PROGRAM_AUTHOR	Darren Hiebert	/dhiebert@users.sourceforge.net/
+!_TAG_PROGRAM_NAME	Exuberant Ctags	//
+!_TAG_PROGRAM_URL	http://ctags.sourceforge.net	/official site/
+!_TAG_PROGRAM_VERSION	5.9~svn20110310	//
+ARRAYSIZE	httpd.h	24;"	d
+ConnPipe	httpd.h	/^struct ConnPipe$/;"	s
+ERROR	httpd.h	27;"	d
+FATAL	httpd.h	28;"	d
+MAXSIZE	httpd.h	23;"	d
+WARNING	httpd.h	26;"	d
+__HTTPD_H__	httpd.h	2;"	d
+_pid	httpd.h	/^	int _pid;$/;"	m	struct:ConnPipe
+_pipe	httpd.h	/^	int _pipe[2];$/;"	m	struct:ConnPipe
+accept_handler	httpd.c	/^void* accept_handler(int connfd)$/;"	f
+addfd	main.c	/^void addfd(int epollfd, int fd)$/;"	f
+clear_head	httpd.c	/^static void clear_head(int sockfd)$/;"	f	file:
+delfd	main.c	/^void delfd(int epollfd, int fd)$/;"	f
+echo_error	httpd.c	/^static void echo_error()$/;"	f	file:
+echo_www	httpd.c	/^static int echo_www(int sockfd, char *path, int size)$/;"	f	file:
+excute_cgi	httpd.c	/^static int excute_cgi(int sockfd, char *path, char *method, char *arg_string)$/;"	f	file:
+find_point	httpd.c	/^char *find_point(char *str)$/;"	f
+get_cur_time	httpd.c	/^char* get_cur_time()$/;"	f
+get_line	httpd.c	/^int get_line(int sockfd, char *buf, int len)$/;"	f
+log_path	main.c	/^const char *log_path = "log\/httpd.log";$/;"	v
+logfd	main.c	/^int logfd = 0;$/;"	v
+main	main.c	/^int main(int argc, char *argv[])$/;"	f
+master_do	main.c	/^void master_do(int listenfd, struct ConnPipe *conn_pipe, int worker_nums)$/;"	f
+mutex	httpd.c	/^pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;$/;"	v
+ok_msg	httpd.c	/^char *ok_msg = "HTTP\/1.0 200 OK\\r\\n";$/;"	v
+printlog	httpd.c	/^void printlog(char *info, int level)$/;"	f
+send_data	main.c	/^int send_data = 1;$/;"	v
+set_blocking	httpd.c	/^int set_blocking(int fd)$/;"	f
+set_non_blocking	main.c	/^int set_non_blocking(int fd)$/;"	f
+startup	httpd.c	/^int startup(char *ip, int port)$/;"	f
+turn	main.c	/^int turn = 1;$/;"	v
+worker_do	main.c	/^void worker_do(int listenfd, struct ConnPipe *conn_pipe, int index)$/;"	f

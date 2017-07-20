@@ -1,0 +1,11 @@
+#!/bin/bash
+
+CUR_PATH=$(pwd)
+CONF_PATH=$(dirname ${CUR_PATH})/conf
+
+CPU_NUMS=$(cat /proc/cpuinfo | grep "physical id" | uniq | wc -l)
+CPU_CORES=$(cat /proc/cpuinfo | grep "cpu cores" | uniq | wc -l)
+
+let ALL_CORES=$(($CPU_NUMS * $CPU_CORES))
+
+echo "ALL_CPU_CORES:${ALL_CORES}" >> ${CONF_PATH}/httpd.conf

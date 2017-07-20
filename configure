@@ -1,0 +1,93 @@
+#! /bin/bash
+
+ROOT_PATH=$(pwd)
+SRC_PATH=${ROOT_PATH}/src
+CGI_PATH=${ROOT_PATH}/cgi
+CGI_SRC=$(cd cgi;ls *.c;cd ..)
+CGI_DST=$(echo $CGI_SRC | sed s/'\.c'//g)
+CGI_SCRIPT=$(ls ${CGI_PATH} | grep "[\+]*\.[\+]*" | grep -v "[\+]*\.c$")
+
+LIB=-lpthread
+INCLUDE_PATH=$PATH
+SRC=$(ls ${SRC_PATH}/*.c | tr "\n" " ")
+OBJ=$(ls ${SRC_PATH}/*.c | sed 's/\.c/\.o/g'| tr "\n" " ")
+SERVER=httpd
+CC=gcc
+
+######################################### cur .
+cat << EOF > Makefile
+.PHONY:all
+all:
+	cd src;make;cd ..;
+	cd cgi;make;cd ..;
+
+.PHONY:clean
+clean:
+	cd src;make clean;cd ..;
+	cd cgi;make clean;cd ..;
+
+.PHONY:output
+output:
+	mkdir -p output;
+	cp -f ${SRC_PATH}/${SERVER} output/;
+	cp -rf wwwroot output/;
+	cp -rf conf output/;
+	cp -rf log output/;
+	cp -rf auto output/;
+	cp -f httpd_ctl output/;
+	mkdir -p output/wwwroot/cgi;	
+EOF
+for CGI_DST_L in $CGI_DST
+do
+cat << EOF >> Makefile
+	cp -f ${CGI_PATH}/${CGI_DST_L} output/wwwroot/cgi/
+EOF
+done
+for CGI_DST_ONE in ${CGI_SCRIPT}
+do
+cat << EOF >> Makefile
+	cp -f ${CGI_PATH}/${CGI_DST_ONE} output/wwwroot/cgi/
+EOF
+done
+cat << EOF >> Makefile
+
+.PHONY:ban_output
+ban_output:
+	rm -rf output
+EOF
+
+######################################### src . 
+cat<< EOF > ${SRC_PATH}/Makefile
+${SERVER}:${OBJ}
+	${CC} -o \$@ \$^ ${LIB};
+%.o:%.c
+	${CC} -c \$<
+
+.PHONY:clean
+clean:
+	rm -f ${SERVER} *.o
+EOF
+
+######################################### cgi
+
+cat << EOF > ${CGI_PATH}/Makefile
+.PHONY:all
+all:$CGI_DST
+
+EOF
+
+for CGI_SRC_R in ${CGI_SRC}
+do
+CGI_DST_L=$(echo $CGI_SRC_R | sed s/\.c//g)
+cat << EOF >> ${CGI_PATH}/Makefile
+${CGI_DST_L}:${CGI_SRC_R}
+	$CC -o \$@ \$^
+EOF
+done
+cat << EOF >> ${CGI_PATH}/Makefile
+
+.PHONY:clean
+clean:
+	rm -f $CGI_DST
+EOF
+

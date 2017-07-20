@@ -1,0 +1,7 @@
+#! /bin/bash
+
+CUR_PATH=$(pwd)
+CONF_PATH=$(dirname ${CUR_PATH})/conf
+
+echo "IP:0" > ${CONF_PATH}/httpd.conf
+echo "PORT:8080" >> ${CONF_PATH}/httpd.conf
